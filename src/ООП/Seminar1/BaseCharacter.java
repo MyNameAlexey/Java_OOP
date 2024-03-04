@@ -1,12 +1,13 @@
-package ООП.Seminar1;
+package ООП.Seminar1.Units;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.ArrayList;
 import java.util.Random;
 
+import ООП.Seminar1.MyInterface.Position;
+import ООП.Seminar1.MyInterface.Step;
 
-public abstract class BaseCharacter implements Step{
+
+public abstract class BaseCharacter implements Step, Model{
 
     protected static Random r;
 
@@ -19,16 +20,16 @@ public abstract class BaseCharacter implements Step{
     protected Boolean status;
     protected int maxHealth;
     protected int speed;
+    public Position position;
 
+    public ArrayList<BaseCharacter> units;
 
-
-    protected Position position;
-
-    public List<BaseCharacter> units;
+    public BaseCharacter() {
+    }
 
     static {BaseCharacter.r = new Random();    }
 
-    public BaseCharacter(String name, Integer x, Integer y) {
+    public BaseCharacter(String name, int x, int y) {
         this.level = 1;
         this.name = name;
         this.health = 50;
@@ -36,15 +37,12 @@ public abstract class BaseCharacter implements Step{
         this.agility = 20;
         this.stamina = 30;
         this.maxHealth = health;
-        this.speed = speed;
+        this.speed = 3;
         this.status = true;
         this.position = new Position(x, y);
     }
 
-    public String getName(){
-        String str = new String(this.name);
-        return str;
-    }
+    public String getName(){return name;}
 
     public int getSpeed() {return speed;}
 
@@ -56,61 +54,48 @@ public abstract class BaseCharacter implements Step{
 
     public int getStamina() {return stamina;}
 
+    public String toString() {
+        return name +  ", Hp: " + health + ", St: " + strength;
+    }
+
     public Boolean getStatus() {return status;}
 
-    public void print() {System.out.println("Уровень: " + level + " Имя: " + name);}
-
     public void GetDamage(int damage) {
-        if (this.health - damage > maxHealth) {
-            this.health -= damage;
-            this.setHealth(this.health);
-        } else {
-            this.death();
+        health -= damage;
+        if (health < 0) {
+            health = 0;
+            death();
         }
+        if (health >= maxHealth) health = maxHealth;
     }
 
     public void death(){
-        if (this.getHealth() < 1) {
+        if (getHealth() < 1) {
             System.out.println("Ваш персонаж мертв");
         }
     }
     /**
      * @return Этот метод сообщает Имя, Уровень здоровья, Координаты и Статус персонажа
      */
-    public String getInfo() {
-        String resStr = new String(this.getName() + this.getHealth() + this.position.getPosition() + this.getStatus());
-        return resStr;
-    }
+    public String getInfo() {return "";}
 
-    public BaseCharacter nearestEnemy (List<BaseCharacter> targets) {
-        Queue<BaseCharacter> target = new LinkedList<>();
-        double minDistance = 10;
+    public BaseCharacter nearestEnemy (ArrayList<BaseCharacter> targets) {
+        BaseCharacter target = null;
+        double minDistance = Double.MAX_VALUE;
         for (BaseCharacter hero : targets) {
-            if (position.getDistanse(hero) < minDistance) {
-                minDistance = position.getDistanse(hero);
-                target.add(hero);
+            if (position.getDistanse(hero.position) < minDistance && !hero.isDead()) {
+                minDistance = position.getDistanse(hero.position);
+                target = hero;
             }
         }
-        return target.peek();
-    }
-
-    public void getHealing (int heal){
-        if (this.health < maxHealth) {
-            if (this.health + heal > maxHealth) {
-                this.health = maxHealth;
-            }else {
-                this.health += heal;
-            }
-
-        }
+        return target;
     }
 
     public boolean isDead(){
-        if (this.getHealth() <= 0) {
-            return false;
+        if (getHealth() <= 0) {
+            return true;
         }
-        return true;
+        return false;
     }
 
-    public void attac(BaseCharacter target) {    }
 }

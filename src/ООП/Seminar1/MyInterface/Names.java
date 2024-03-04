@@ -1,4 +1,4 @@
-package ООП.Seminar1;
+package ООП.Seminar1.MyInterface;
 
 
 public enum Names {

@@ -1,18 +1,31 @@
-package ООП.Seminar1;
+package ООП.Seminar1.Units;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Peasant extends BaseCharacter {
-    int unity;
+    int arrow;
+    public boolean flag;
 
-    public Peasant(String name, Integer x, Integer y) {
-        super(name, x, y);
-        this.speed = 0;
+    public Peasant() {
     }
 
-    public void work(int hour) {
-        stamina -= hour / 4;
+    public void setArrow(int arrow) {
+        this.arrow = arrow;
+    }
+
+    public int getArrow() {
+        return arrow;
+    }
+
+    public Peasant(String name, int x, int y) {
+        super(name, x, y);
+        this.speed = 0;
+        this.arrow = 5;
+        this.flag = false;
+    }
+
+    public String getInfo() {
+        return "Фермер";
     }
 
     @Override
@@ -22,15 +35,13 @@ public class Peasant extends BaseCharacter {
         }
     }
 
-    @Override
-    public String toString() {
-        return String.format("Class: %s  Name: %s", this.getClass().getSimpleName(), getName());
 
-    }
 
-    public void step(List<BaseCharacter> list) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'step'");
+    public void step(ArrayList<BaseCharacter> targets, ArrayList<BaseCharacter> friends) {
+
+        if (getHealth() <= 0) return;
+        flag = false;
+
     }
 
 
